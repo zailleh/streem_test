@@ -17,8 +17,8 @@ class ViewsController < ApplicationController
       Elasticsearch::Client.new hosts: [
       { host: 'test.es.streem.com.au',
         port: '9200',
-        user: 'elastic',
-        password: 'streem',
+        user: ENV.fetch("STREEM_ES_TEST_U"),
+        password: ENV.fetch("STREEM_ES_TEST_P"),
         scheme: 'http'
       } ]
     end
