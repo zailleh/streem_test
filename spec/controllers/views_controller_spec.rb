@@ -1,22 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe ViewsController, type: :controller do
-  describe 'GET /es_health' do
-    it 'talks to elastic search and gets 200 response' do
-      get :es_health
-      expect(assigns(:health).status).to be 200
-    end
-  end
 
-  describe 'GET to /page_views' do
+  describe 'PUT to /page_views' do
     let(:headers) { {"CONTENT_TYPE" => "application/json" } }
     let(:body) {
       '{
         "urls": [
-          "http://www.news.com.au"
+          "http://www.news.com.au/technology/environment/trump-pulls-us-out-of-paris-climate-agreement/news-story/f5c30a07c595a10a81d67611d0515a0a"
         ],
-        "before": "2017-06-04T14:00:00.000Z",
-        "after": "2017-06-01T14:00:00.000Z",
+        "before": "2017-06-04T14:00",
+        "after": "2017-06-01T14:00",
         "interval": "15m"
       }'
     }
@@ -28,15 +22,16 @@ RSpec.describe ViewsController, type: :controller do
               {
                 terms: {
                   page_url: [
-                    "http://www.news.com.au"
+                    "http://www.news.com.au/technology/environment/trump-pulls-us-out-of-paris-climate-agreement/news-story/f5c30a07c595a10a81d67611d0515a0a"
                   ]
                 }
               },
               {
                 range: {
                   derived_tstamp: {
-                    gte: "2017-06-01T14:00:00.000Z",
-                    lte: "2017-06-04T14:00:00.000Z"
+                    gte: "2017-06-01T14:00",
+                    lte: "2017-06-04T14:00",
+                    format: "yyyy-MM-dd'T'HH:mm"
                   }
                 }
               }
@@ -45,10 +40,10 @@ RSpec.describe ViewsController, type: :controller do
         },
         aggs: {
           first_agg: {
-            date_histogram: { field: "derived_tstamp", interval: '15m' },
+            terms: { field: "page_url"  },
             aggs: {
               sub_agg: { 
-                terms: { field: "page_url"  }
+                date_histogram: { field: "derived_tstamp", interval: '15m' }
               }
             }
           }
@@ -56,7 +51,7 @@ RSpec.describe ViewsController, type: :controller do
       }
     }
     before {
-      get 'fetch', :body => body, as: :json
+      put 'fetch', :body => body, as: :json
     }
 
     it 'receives data from the request' do
@@ -81,9 +76,8 @@ RSpec.describe ViewsController, type: :controller do
     end
 
     it 'responds with json body' do
-      total_shards = assigns(:search_results)['_shards']['total']
       json_body = JSON.parse(response.body)
-      expect(json_body['_shards']['total']).to eq total_shards
+      expect(json_body['hits']['total']).to eq 242498
     end
   end
 end

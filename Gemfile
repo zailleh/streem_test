@@ -31,6 +31,16 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Elastic Search
 gem 'elasticsearch'
 
+# vue.js
+gem 'vue-rails'
+
+# chart.js
+gem 'chart-js-rails'
+
+# gem 'sass-rails'
+# gem 'uglifier'
+# gem 'coffee-rails'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

@@ -1,14 +1,12 @@
 class ViewsController < ApplicationController
-  def es_health
-    @health = health_check
-  end
+  skip_before_action :verify_authenticity_token, :only => [:fetch]
 
+  # PUT /page_views
   def fetch
-    #get body from request
     @request_data = request.body.read
     @query_obj = build_query_obj(@request_data)
-    @search_results = do_search 'events', @query_obj
-    # search_json = JSON::parse(@request_data)
+    @search_results = do_search @query_obj
+
     render :json => @search_results
   end
 
@@ -28,7 +26,7 @@ class ViewsController < ApplicationController
       client.perform_request 'GET', '_cluster/health'
     end 
 
-    def do_search index, search
+    def do_search search
       client = get_es_client
       client.search body: search
     end
@@ -48,7 +46,8 @@ class ViewsController < ApplicationController
                 range: {
                   derived_tstamp: {
                     gte: request_data['after'],
-                    lte: request_data['before']
+                    lte: request_data['before'],
+                    format: "yyyy-MM-dd'T'HH:mm"
                   }
                 }
               }
@@ -57,10 +56,10 @@ class ViewsController < ApplicationController
         },
         aggs: {
           first_agg: {
-            date_histogram: { field: "derived_tstamp", interval: request_data['interval'] },
+            terms: { field: "page_url"  },
             aggs: {
               sub_agg: { 
-                terms: { field: "page_url"  }
+                date_histogram: { field: "derived_tstamp", interval: request_data['interval'] }
               }
             }
           }

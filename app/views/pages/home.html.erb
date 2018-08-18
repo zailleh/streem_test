@@ -1,0 +1,24 @@
+<form id="page-view" v-on:submit.prevent="fetchResults" >
+  <p>
+    <label for="after">Start of Range</label>
+    <input type="datetime-local" name="after" v-model="after">
+    <label for="before">End of Range</label>
+    <input type="datetime-local" name="before" v-model="before">
+  </p>
+  <p>
+    <select v-model="interval">
+        <option>15m</option>
+        <option>hour</option>
+        <option>day</option>
+    </select>
+  </p>
+  <p>
+    <select v-model="urls" multiple>
+      <option>http://www.smh.com.au/sport/tennis/an-open-letter-from-martina-navratilova-to-margaret-court-arena-20170601-gwhuyx.html</option>
+      <option>http://www.smh.com.au/nsw/premier-gladys-berejiklian-announces-housing-affordability-reforms-20170601-gwi0jn.html</option>
+      <option>http://www.news.com.au/technology/environment/trump-pulls-us-out-of-paris-climate-agreement/news-story/f5c30a07c595a10a81d67611d0515a0a</option>
+    </select>
+  </p>
+  <input type="submit" value="Search">
+</form>
+<canvas id="myChart" width="200" height="200"></canvas>
