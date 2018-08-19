@@ -1,9 +1,11 @@
 const makeChartData = function(data) {
-  // {
+  // template for dataset
+  // dataset: [{
   //   stack: stack id,
   //     label: "Page Views",
   //       data: [12, 19, 3, 5, 2, 3], // data is each views in each interval
-  // }
+  // }]
+
   const colors = [
     "rgb(169, 50, 38)",
     "rgb(202, 111, 30)",
@@ -13,13 +15,13 @@ const makeChartData = function(data) {
     "rgb(22, 160, 133)"
   ];
 
-  // create data object
+  // create data object that we'll return
   const chartData = { 
     labels: [],
     datasets: [], 
   };
 
-  // array of 'URLS" -- eg columns
+  // array of 'URLS" -- eg stacked parts
   // create a stack for each sub agg for chart.js
   const urls = data.aggregations.first_agg.buckets;
 
@@ -28,8 +30,9 @@ const makeChartData = function(data) {
   // TODO: Convert this to human-friendly timestamp
   chartData.labels = urls[0].sub_agg.buckets.map( (b) => b.key_as_string) 
 
-
+  // create one dataset per URL
   chartData.datasets = urls.map( (bucket) => {
+    // viewsPerInterval are the columns
     const viewsPerInterval = bucket.sub_agg.buckets.map(
       (sub_bucket) => sub_bucket.doc_count
     )
@@ -48,28 +51,33 @@ const makeChartData = function(data) {
 const makeChart = function(data) {
   const ctx = document.getElementById("myChart").getContext("2d");
 
-  // console.log(data);
   chartData = makeChartData(data)
-  console.log(chartData);
 
   const myChart = new Chart(ctx, {
     type: "bar",
     data: chartData,
     options: {
+      legend: {
+        display: true,
+        position: "bottom",
+        fullWidth: false
+      },
       scales: {
         yAxes: [
           {
-            ticks: {
-              beginAtZero: true
+            stacked: true,
+            scaleLabel: {
+              display: true,
+              labelString: "Page Views"
             }
-          },
-          {
-            stacked: true
           }
         ],
         xAxes: [
           {
-            stacked: true
+            scaleLabel: {
+              display: true,
+              labelString: "Time"
+            }
           }
         ]
       }
@@ -82,9 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
     el: "#page-view",
     data: {
       urls: [],
-      before: "2017-06-04T14:00",
-      after: "2017-06-01T14:00",
-      interval: "15m"
+      before: "2017-06-04T14:00", // default
+      after: "2017-06-01T14:00", // default
+      interval: "15m" // default
     },
     methods: {
       fetchResults() {
