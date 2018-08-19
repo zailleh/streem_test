@@ -48,12 +48,15 @@ const makeChartData = function(data) {
   return chartData;
 }
 
-const makeChart = function(data) {
+const makeChart = function(data, chart) {
+  const canvas = document.getElementById("myChart").cloneNode();
+  document.getElementById("myChart").remove();
+  document.getElementsByClassName('chart-area')[0].appendChild(canvas);
   const ctx = document.getElementById("myChart").getContext("2d");
+  
+  const chartData = makeChartData(data)
 
-  chartData = makeChartData(data)
-
-  const myChart = new Chart(ctx, {
+  const pageViewChart = new Chart(ctx, {
     type: "bar",
     data: chartData,
     options: {
@@ -83,6 +86,8 @@ const makeChart = function(data) {
       }
     }
   });
+  
+  return pageViewChart;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
