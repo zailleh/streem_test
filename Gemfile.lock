@@ -87,6 +87,7 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
+    pg (1.0.0)
     puma (3.12.0)
     rack (2.0.5)
     rack-test (1.1.0)
@@ -170,6 +171,7 @@ DEPENDENCIES
   chart-js-rails
   elasticsearch
   listen (>= 3.0.5, < 3.2)
+  pg
   puma (~> 3.11)
   rails (~> 5.2.1)
   rails-controller-testing
