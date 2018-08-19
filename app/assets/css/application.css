@@ -1,0 +1,29 @@
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: lightgrey;
+}
+
+.container {
+  max-width: 960px;
+  min-width: 320px;
+  margin: 0 auto;
+}
+
+form, .chart-area {
+  background-color: whitesmoke;
+  border-radius: .25em;
+  margin: 1em;
+  text-align: center;
+  box-shadow: 0 0 .25em rgba(0,0,0,0.5);
+  padding: 1em;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid lightgrey;
+  padding-bottom: 1em;
+}

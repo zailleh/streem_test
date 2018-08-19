@@ -1,24 +1,31 @@
 <form id="page-view" v-on:submit.prevent="fetchResults" >
-  <p>
-    <label for="after">Start of Range</label>
+  <h2>Page Views Report</h2>
+  <h4>Select Report Range</h4>
+  <fieldset>
+    <label for="after">From</label>
     <input type="datetime-local" name="after" v-model="after">
-    <label for="before">End of Range</label>
+    <label for="before">To</label>
     <input type="datetime-local" name="before" v-model="before">
-  </p>
-  <p>
+  </fieldset>
+  <h4>Select display interval<h4>
+  <h6>Interval will determine bars in the chart</h6>
+  <fieldset>
     <select v-model="interval">
         <option>15m</option>
         <option>hour</option>
         <option>day</option>
     </select>
-  </p>
-  <p>
+  </fieldset>
+  <h4>Select the URLs to generate report for</h4>
+  <fieldset>
     <select v-model="urls" multiple>
       <option>http://www.smh.com.au/sport/tennis/an-open-letter-from-martina-navratilova-to-margaret-court-arena-20170601-gwhuyx.html</option>
       <option>http://www.smh.com.au/nsw/premier-gladys-berejiklian-announces-housing-affordability-reforms-20170601-gwi0jn.html</option>
       <option>http://www.news.com.au/technology/environment/trump-pulls-us-out-of-paris-climate-agreement/news-story/f5c30a07c595a10a81d67611d0515a0a</option>
     </select>
-  </p>
+  </fieldset>
   <input type="submit" value="Search">
 </form>
-<canvas id="myChart" width="200" height="200"></canvas>
+<div class="chart-area">
+  <canvas id="myChart" width="200" height="200"></canvas>
+</div>

@@ -9,7 +9,7 @@ class ViewsController < ApplicationController
 
     render :json => @search_results
   end
-
+ 
   private
     def get_es_client
       Elasticsearch::Client.new hosts: [
