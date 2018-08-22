@@ -14,42 +14,7 @@ RSpec.describe ViewsController, type: :controller do
         "interval": "15m"
       }'
     }
-    let(:query_obj) {
-      {
-        query: {
-          bool: {
-            must: [
-              {
-                terms: {
-                  page_url: [
-                    "http://www.news.com.au/technology/environment/trump-pulls-us-out-of-paris-climate-agreement/news-story/f5c30a07c595a10a81d67611d0515a0a"
-                  ]
-                }
-              },
-              {
-                range: {
-                  derived_tstamp: {
-                    gte: "2017-06-01T14:00",
-                    lte: "2017-06-04T14:00",
-                    format: "yyyy-MM-dd'T'HH:mm"
-                  }
-                }
-              }
-            ]
-          }
-        },
-        aggs: {
-          first_agg: {
-            terms: { field: "page_url"  },
-            aggs: {
-              sub_agg: { 
-                date_histogram: { field: "derived_tstamp", interval: '15m' }
-              }
-            }
-          }
-        }
-      }
-    }
+    
     before {
       put 'fetch', :body => body, as: :json
     }
@@ -58,17 +23,6 @@ RSpec.describe ViewsController, type: :controller do
       request_data = assigns(:request_data)
       
       expect(request_data).to eq body
-    end
-
-    it 'formats elastic search request' do
-      built_query = assigns(:query_obj)
-
-      expect(built_query).to eq query_obj
-    end
-
-    it 'performs search successfully' do
-      total_shards = assigns(:search_results)['_shards']['total']
-      expect(total_shards).to eq 58
     end
 
     it 'responds with content type application/json' do
@@ -136,32 +90,3 @@ end
 #       "type": "keyword"
 #     }
 #   }
-
-
-# ELASTIC SEARCH TEMPLATE
-# GET /_search
-# {
-#   "query": {
-#     "bool": {
-#       "must": { "terms": { "page_url": ["www.news.com.au","www.heraldsun.com.au"] }},
-#       "must": {
-#         "range": {
-#         "derived_tstamp" : {
-#           "gte": "01/06/2017",
-#           "lte": "3/06/2017",
-#           }
-#         }
-#       }
-#     }
-#   },
-#   "aggs" : {
-#     "first_agg": {
-#       "date_histogram" : { "field" : "derived_tstamp", "interval" : "15m" },
-#       "aggs": {
-#         "sub_agg": { 
-#           "terms": { "field": "page_url"  }
-#         }
-#       }
-#     }
-#   }
-# }
