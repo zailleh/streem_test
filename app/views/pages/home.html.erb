@@ -7,13 +7,19 @@
     <label for="before">To</label>
     <input type="datetime-local" name="before" v-model="before">
   </fieldset>
-  <h4>Select display interval<h4>
+  <h4>Group by<h4>
   <h6>Interval will determine bars in the chart</h6>
   <fieldset>
-    <select v-model="interval">
-        <option>15m</option>
-        <option>hour</option>
-        <option>day</option>
+    <!-- year (1y), quarter (1q), month (1M), week (1w), day (1d), hour (1h), minute (1m), second (1s) -->
+    <input type="number" v-model="intervalNum" v-show="showIntervalNum" value="1" />
+    <select v-model="intervalUnit">
+        <option value="m">minute(s)</option>
+        <option value="h">hour(s)</option>
+        <option value="d">day(s)</option>
+        <option value="w">week</option>
+        <option value="M">month</option>
+        <option value="q">quarter</option>
+        <option value="y">year</option>
     </select>
   </fieldset>
   <h4>Select the URLs to generate report for</h4>
